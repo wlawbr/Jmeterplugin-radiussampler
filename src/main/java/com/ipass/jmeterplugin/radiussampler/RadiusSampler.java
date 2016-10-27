@@ -55,6 +55,7 @@ public class RadiusSampler extends AbstractSampler
 		String sharedSecret = getSharedSecret();
 		int authPort = getAuthPort();
 		int acctPort = getAcctPort();
+                int acctType = getAcctType();
 
 		int retryCount = getRetryCount();
 		int timeout = getSocketTimeout();
@@ -201,8 +202,24 @@ public class RadiusSampler extends AbstractSampler
 					if(collectionProperty!=null)
 						acctReq=addAttributes.addAcctRadiusAttribute(acctReq, collectionProperty);
 					acctStopRadiusPacket=rcClient.account(acctReq);
+                                }else if(reqType.equalsIgnoreCase("custacct")){
+					authRAcct=false;
+					rcClient = new RadiusClient(serverIp,sharedSecret);
+					acctReq = new AccountingRequest(userName, acctType);
+					rcClient.setAcctPort(acctPort);
+					if(collectionProperty!=null)
+						acctReq=addAttributes.addAcctRadiusAttribute(acctReq, collectionProperty);
+					/*RadiusAttribute acctRadAttr = getAttributes();
+					if(acctRadAttr!=null)
+						accessReq.addAttribute(getAttributes());*/
+					if(timeout>0)
+						rcClient.setSocketTimeout(timeout);
+
+					if(retryCount>0)
+						rcClient.setRetryCount(retryCount);
+					acctStartRadiusPacket=rcClient.account(acctReq);
 				}else{
-					throw new IllegalArgumentException("Radius packet type is only auth,acct or both. Invalid request Type"+reqType);
+					throw new IllegalArgumentException("Radius packet type is only auth, acct, both or custacct. Invalid request Type"+reqType);
 				}
 
 
@@ -351,6 +368,10 @@ public class RadiusSampler extends AbstractSampler
 		return getPropertyAsInt(RadiusSamplerElements.ACCT_PORT);
 	}
 
+        public int getAcctType() {
+                return getPropertyAsInt(RadiusSamplerElements.AUTH_ACCTTYPE_REQ);
+        }
+        
 	public void setRequestType(String requestType)
 	{
 		setProperty(RadiusSamplerElements.REQUEST_TYPE, requestType);

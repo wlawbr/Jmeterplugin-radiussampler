@@ -18,5 +18,7 @@ public interface RadiusSamplerElements {
 	public String AUTH_REQ="RadiusSampler.authReq";
 	public String ACCT_REQ="RadiusSampler.acctReq";
 	public String AUTH_ACCT_REQ="RadiusSampler.authAcctReq";
+        public String AUTH_CUSTACCT_REQ="RadiusSampler.customAcctReq";
+        public String AUTH_ACCTTYPE_REQ="RadiusSampler.customAcctTypeReq";
 	
 }

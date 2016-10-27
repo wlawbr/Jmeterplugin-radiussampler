@@ -10,6 +10,7 @@ import java.util.Enumeration;
 import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -59,6 +60,8 @@ public class RadiusConfigGUI extends AbstractConfigGui implements ActionListener
 	public javax.swing.JTextField acctPortText;
 	public javax.swing.JLabel authPortLable;
 	public javax.swing.JTextField authPortText;
+        public javax.swing.JLabel acctAuthTypeLable;
+	public javax.swing.JTextField acctAuthTypeText;
 	public javax.swing.ButtonGroup buttonGroup1;
 	
 	public javax.swing.ButtonGroup buttonSessionGroup;
@@ -68,6 +71,7 @@ public class RadiusConfigGUI extends AbstractConfigGui implements ActionListener
 	public javax.swing.JRadioButton radioAcct;
 	public javax.swing.JRadioButton radioAuth;
 	public javax.swing.JRadioButton radioBoth;
+        public javax.swing.JRadioButton radioCustAcct;
 	public javax.swing.JLabel requestTypeLable;
 	public javax.swing.JLabel retryLable;
 	public javax.swing.JTextField retryText;
@@ -189,6 +193,7 @@ public class RadiusConfigGUI extends AbstractConfigGui implements ActionListener
 
 		element.setProperty(RadiusSamplerElements.AUTH_PORT, this.authPortText.getText());
 		element.setProperty(RadiusSamplerElements.ACCT_PORT, this.acctPortText.getText());
+                element.setProperty(RadiusSamplerElements.AUTH_ACCTTYPE_REQ, this.acctAuthTypeText.getText());
 
 		element.setProperty(RadiusSamplerElements.USER_NAME, this.usernameTextField.getText());
 		element.setProperty(RadiusSamplerElements.PASSWORD, new String(this.passwordText.getPassword()));
@@ -232,6 +237,7 @@ public class RadiusConfigGUI extends AbstractConfigGui implements ActionListener
         radioAuth = new javax.swing.JRadioButton("Auth Request",true);
         radioAcct = new javax.swing.JRadioButton();
         radioBoth = new javax.swing.JRadioButton();
+        radioCustAcct = new javax.swing.JRadioButton();
         
         //Adding session Id
         nGenSessionId = new javax.swing.JRadioButton("Unique Session Id",true);
@@ -245,6 +251,8 @@ public class RadiusConfigGUI extends AbstractConfigGui implements ActionListener
         authPortText = new javax.swing.JTextField();
         acctPortLable = new javax.swing.JLabel();
         acctPortText = new javax.swing.JTextField();
+        acctAuthTypeLable = new javax.swing.JLabel();
+        acctAuthTypeText = new javax.swing.JTextField();
         timeoutLable = new javax.swing.JLabel();
         timeoutText = new javax.swing.JTextField();
         retryLable = new javax.swing.JLabel();
@@ -259,9 +267,11 @@ public class RadiusConfigGUI extends AbstractConfigGui implements ActionListener
         this.radioAuth.setActionCommand("auth");
         this.radioAcct.setActionCommand("acct");
         this.radioBoth.setActionCommand("both");
+        this.radioBoth.setActionCommand("custacct");
         this.buttonGroup1.add(radioAuth);
         this.buttonGroup1.add(radioAcct);
         this.buttonGroup1.add(radioBoth);
+        this.buttonGroup1.add(radioCustAcct);
 
         this.nGenSessionId.setActionCommand("gensession");
         this.yGenSessionId.setActionCommand("nosession");
@@ -281,6 +291,8 @@ public class RadiusConfigGUI extends AbstractConfigGui implements ActionListener
 
         radioBoth.setText("Auth & Acct Request");
 
+        radioCustAcct.setText("Custom Acct Request");
+
         requestTypeLable.setText("Request Type");
 
         serverIpLable.setText("Server IP");
@@ -293,6 +305,8 @@ public class RadiusConfigGUI extends AbstractConfigGui implements ActionListener
 
         acctPortLable.setText("Acct Port");
 
+        acctAuthTypeLable.setText("Acct Type No");
+        
         timeoutLable.setText("Timeout");
 
         retryLable.setText("Retry");
@@ -332,6 +346,10 @@ public class RadiusConfigGUI extends AbstractConfigGui implements ActionListener
                         .addComponent(acctPortLable)
                         .addGap(18, 18, 18)
                         .addComponent(acctPortText, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                         .addGap(23, 23, 23)
+                        .addComponent(sharedSecretLable)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(sharedText, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(timeoutLable)
@@ -342,9 +360,9 @@ public class RadiusConfigGUI extends AbstractConfigGui implements ActionListener
                         .addGap(34, 34, 34)
                         .addComponent(retryText, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(23, 23, 23)
-                        .addComponent(sharedSecretLable)
+                        .addComponent(acctAuthTypeLable)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(sharedText, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(acctAuthTypeText, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(127, 127, 127))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(requestTypeLable)
@@ -354,6 +372,8 @@ public class RadiusConfigGUI extends AbstractConfigGui implements ActionListener
                         .addComponent(radioAcct)
                         .addGap(18, 18, 18)
                         .addComponent(radioBoth)
+                        .addGap(18, 18, 18)
+                        .addComponent(radioCustAcct)
                         .addGap(0, 0, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
@@ -366,6 +386,7 @@ public class RadiusConfigGUI extends AbstractConfigGui implements ActionListener
                     .addComponent(radioAuth)
                     .addComponent(radioAcct)
                     .addComponent(radioBoth)
+                    .addComponent(radioCustAcct)
                     .addComponent(requestTypeLable))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
