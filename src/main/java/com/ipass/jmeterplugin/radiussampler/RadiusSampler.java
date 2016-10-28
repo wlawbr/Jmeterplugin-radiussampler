@@ -59,10 +59,11 @@ public class RadiusSampler extends AbstractSampler
 
 		SampleResult res = new SampleResult();
 		res.setSampleLabel(getName());
-		if(authPort !=0 && acctPort !=0 ){
-			res.setSamplerData("Host: " + getServerIp() + " Auth Port: " + getAuthPort() + " Acct Port: "+getAcctPort());
-		}
-
+		if(authPort !=0 && acctPort !=0 && getRequestType() == "custacct"){
+			res.setSamplerData("Host: " + getServerIp() + " Auth Port: " + getAuthPort() + " Acct Port: " + getAcctPort() + " Accounting-type: " + getCustAcctType());
+		} else if (authPort !=0 && acctPort !=0){
+                        res.setSamplerData("Host: " + getServerIp() + " Auth Port: " + getAuthPort() + " Acct Port: " + getAcctPort());
+                }
 
 
 		CollectionProperty collectionProperty=getAttributesManager().getAttributes();
@@ -95,6 +96,7 @@ public class RadiusSampler extends AbstractSampler
 				RadiusPacket authRadiusPacket = null;
 				RadiusPacket acctStartRadiusPacket = null;
 				RadiusPacket acctStopRadiusPacket = null;
+				RadiusPacket acctCustAcctRadiusPacket = null;
 				boolean reqAuthNAcct = false;
 				boolean authRAcct = true;
 
@@ -214,7 +216,7 @@ public class RadiusSampler extends AbstractSampler
 
 					if(retryCount>0)
 						rcClient.setRetryCount(retryCount);
-					acctStartRadiusPacket=rcClient.account(acctReq);
+					acctCustAcctRadiusPacket=rcClient.account(acctReq);
 				}else{
 					throw new IllegalArgumentException("Radius packet type is only auth, acct, both or custacct. Invalid request Type"+reqType);
 				}
@@ -266,12 +268,21 @@ public class RadiusSampler extends AbstractSampler
 							res.setDataType("text");
 							res.setResponseCodeOK();
 							res.setResponseMessage(acctStartRadiusPacket.getPacketTypeName());
-						}else{
+						}else if(acctCustAcctRadiusPacket!=null){
+							res.setSuccessful(true);
+							res.setResponseData(acctCustAcctRadiusPacket.getPacketTypeName().getBytes());
+							res.setDataType("text");
+							res.setResponseCodeOK();
+							res.setResponseMessage(acctCustAcctRadiusPacket.getPacketTypeName());
+                                                    
+                                                } else {
 							res.setSuccessful(false);
 							if(acctStartRadiusPacket==null)
 								res.setResponseMessage("Server Dropped the start request ");
 							if(acctStopRadiusPacket==null)
 								res.setResponseMessage("Server Dropped the stop request ");
+							if(acctCustAcctRadiusPacket==null)
+								res.setResponseMessage("Server Dropped the customised accounting request ");
 							res.setResponseCode("500");
 						}
 
@@ -396,6 +407,11 @@ public class RadiusSampler extends AbstractSampler
 	public String getPassword()
 	{
 		return getPropertyAsString(RadiusSamplerElements.PASSWORD);
+	}
+
+        public String getCustAcctType()
+	{
+		return getPropertyAsString(RadiusSamplerElements.AUTH_ACCTTYPE_REQ);
 	}
 
 }

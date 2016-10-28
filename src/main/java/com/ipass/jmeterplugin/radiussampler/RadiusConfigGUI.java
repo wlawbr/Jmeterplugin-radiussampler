@@ -156,7 +156,10 @@ public class RadiusConfigGUI extends AbstractConfigGui implements ActionListener
 		this.passwordText.setText(element
 				.getPropertyAsString(RadiusSamplerElements.PASSWORD));
 
-		this.attributeManager = (RadiusAttributesManager) element.getProperty(
+		this.acctAuthTypeText.setText(element
+				.getPropertyAsString(RadiusSamplerElements.AUTH_ACCTTYPE_REQ));
+
+                this.attributeManager = (RadiusAttributesManager) element.getProperty(
 				RadiusSamplerElements.RADIUS_ATTRIBUTES).getObjectValue();
 
 		this.attributeTableModel = new RadiusAttributeTableModel(attributeManager);
@@ -267,7 +270,7 @@ public class RadiusConfigGUI extends AbstractConfigGui implements ActionListener
         this.radioAuth.setActionCommand("auth");
         this.radioAcct.setActionCommand("acct");
         this.radioBoth.setActionCommand("both");
-        this.radioBoth.setActionCommand("custacct");
+        this.radioCustAcct.setActionCommand("custacct");
         this.buttonGroup1.add(radioAuth);
         this.buttonGroup1.add(radioAcct);
         this.buttonGroup1.add(radioBoth);
@@ -284,8 +287,6 @@ public class RadiusConfigGUI extends AbstractConfigGui implements ActionListener
         
 
         radioAuth.setText("Auth Request");
-
-
 
         radioAcct.setText("Acct Request");
 
